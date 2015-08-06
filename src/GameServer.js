@@ -70,7 +70,7 @@ function GameServer() {
         playerMinMassSplit: 36, // Mass required to split
         playerMaxCells: 16, // Max cells the player is allowed to have
         playerRecombineTime: 30, // Base amount of seconds before a cell is allowed to recombine
-        playerMassDecayRate: .05, // Amount of mass lost per second
+        playerMassDecayRate: .15, // Amount of mass lost per second
         playerMinMassDecay: 30, // Minimum mass for decay to occur
         playerMaxNickLength: 15, // Maximum nick length
         playerDisconnectTime: 60, // The amount of seconds it takes for a player cell to be removed after disconnection (If set to -1, cells are never removed)
