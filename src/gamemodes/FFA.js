@@ -36,11 +36,11 @@ FFA.prototype.leaderboardAddSort = function(player,leaderboard) {
 FFA.prototype.onPlayerSpawn = function(gameServer,player) {
     // Random color
     player.color = gameServer.getRandomColor();
-    
+
     // Set up variables
     var pos = gameServer.getRandomPosition();
     var startMass = gameServer.config.playerStartMass;
-    
+
     // Check if there are ejected mass in the world.
     if (gameServer.nodesEjected.length > 0) {
         var index = Math.floor(Math.random() * 100) + 1;
@@ -64,7 +64,7 @@ FFA.prototype.onPlayerSpawn = function(gameServer,player) {
             });
         }
     }
-    
+
     // Spawn player
     gameServer.spawnPlayer(player,pos,startMass);
 }
@@ -87,11 +87,11 @@ FFA.prototype.updateLB = function(gameServer) {
             // Initial player
             lb.push(player);
             continue;
-        } else if (lb.length < 10) {
+        } else if (lb.length < 64) {
             this.leaderboardAddSort(player,lb);
         } else {
             // 10 in leaderboard already
-            if (playerScore > lb[9].getScore(false)) {
+            if (playerScore > lb[63].getScore(false)) {
                 lb.pop();
                 this.leaderboardAddSort(player,lb);
             }
@@ -100,4 +100,3 @@ FFA.prototype.updateLB = function(gameServer) {
 
     this.rankOne = lb[0];
 };
-

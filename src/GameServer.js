@@ -13,7 +13,7 @@ var BotLoader = require('./ai/BotLoader.js');
 
 // GameServer implementation
 function GameServer() {
-    // Startup 
+    // Startup
     this.run = true;
     this.lastNodeId = 1;
     this.lastPlayerId = 1;
@@ -40,7 +40,7 @@ function GameServer() {
 
     // Config
     this.config = { // Border - Right: X increases, Down: Y increases (as of 2015-05-20)
-        serverMaxConnections: 64, // Maximum amount of connections to the server.
+        serverMaxConnections: 128, // Maximum amount of connections to the server.
         serverPort: 443, // Server port
         serverGamemode: 0, // Gamemode, 0 = FFA, 1 = Teams
         serverBots: 0, // Amount of player bots to spawn
@@ -70,8 +70,8 @@ function GameServer() {
         playerMinMassSplit: 36, // Mass required to split
         playerMaxCells: 16, // Max cells the player is allowed to have
         playerRecombineTime: 30, // Base amount of seconds before a cell is allowed to recombine
-        playerMassDecayRate: .002, // Amount of mass lost per second
-        playerMinMassDecay: 9, // Minimum mass for decay to occur
+        playerMassDecayRate: .05, // Amount of mass lost per second
+        playerMinMassDecay: 30, // Minimum mass for decay to occur
         playerMaxNickLength: 15, // Maximum nick length
         playerDisconnectTime: 60, // The amount of seconds it takes for a player cell to be removed after disconnection (If set to -1, cells are never removed)
         tourneyMaxPlayers: 12, // Maximum amount of participants for tournament style game modes
@@ -135,10 +135,10 @@ GameServer.prototype.start = function() {
     // Properly handle errors because some people are too lazy to read the readme
     this.socketServer.on('error', function err(e) {
         switch (e.code) {
-            case "EADDRINUSE": 
+            case "EADDRINUSE":
                 console.log("[Error] Server could not bind to port! Please close out of Skype or change 'serverPort' in gameserver.ini to a different number.");
                 break;
-            case "EACCES": 
+            case "EACCES":
                 console.log("[Error] Please make sure you are running Ogar with root privileges.");
                 break;
             default:
@@ -390,7 +390,7 @@ GameServer.prototype.spawnPlayer = function(player,pos,mass) {
 	if (mass == null) { // Get starting mass
 		mass = this.config.playerStartMass;
 	}
-	
+
     // Spawn player and add to world
     var cell = new Entity.PlayerCell(this.getNextNodeId(), player, pos, mass);
     this.addNode(cell);
@@ -556,7 +556,7 @@ GameServer.prototype.splitCells = function(client) {
         // Create cell
         var split = new Entity.PlayerCell(this.getNextNodeId(), client, startPos, newMass);
         split.setAngle(angle);
-        split.setMoveEngineData(splitSpeed, 32, 0.85); 
+        split.setMoveEngineData(splitSpeed, 32, 0.85);
         split.calcMergeTime(this.config.playerRecombineTime);
 
         // Add to moving cells list
@@ -777,7 +777,7 @@ GameServer.prototype.updateCells = function() {
         if (!cell) {
             continue;
         }
-        
+
         if (cell.recombineTicks > 0) {
             // Recombining
             cell.recombineTicks--;
@@ -823,17 +823,17 @@ GameServer.prototype.switchSpectator = function(player) {
                 oldPlayer = 0;
                 continue;
             }
-            
+
             if (!this.clients[oldPlayer]) {
                 // Break out of loop in case client tries to spectate an undefined player
                 player.spectatedPlayer = -1;
                 break;
             }
-            
+
             if (this.clients[oldPlayer].playerTracker.cells.length > 0) {
                 break;
             }
-            
+
             oldPlayer++;
             count++;
         }
@@ -865,4 +865,3 @@ WebSocket.prototype.sendPacket = function(packet) {
         this.removeAllListeners();
     }
 };
-
